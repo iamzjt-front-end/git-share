@@ -48,7 +48,7 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ onNext }) => {
         onClick={onNext}
         className="group bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full flex items-center gap-3 text-lg font-bold transition-all shadow-[0_0_30px_rgba(59,130,246,0.3)]"
       >
-        开始学习 
+        开始 
         <ChevronRight className="transition-transform group-hover:translate-x-1" />
       </motion.button>
 
