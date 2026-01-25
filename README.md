@@ -26,7 +26,7 @@ This project is configured for automatic deployment to GitHub Pages using GitHub
 
 1. Push your changes to the `main` branch
 2. GitHub Actions will automatically build and deploy your app
-3. Your app will be available at: `https://[username].github.io/git-rebase-+-merge-workflow-pro/`
+3. Your app will be available at: `https://[username].github.io/git-share/`
 
 ### Manual Deployment
 
