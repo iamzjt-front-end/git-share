@@ -54,9 +54,10 @@ const ContentSlide: React.FC<ContentSlideProps> = ({
                 transition={{ delay: 0.1 * i }}
                 className="flex items-center gap-6 group"
               >
+                {/* Fixed TypeScript error by casting to React.ReactElement<any> to allow 'size' prop injection */}
                 {typeof b === 'object' && b.icon && (
                   <div className="shrink-0 p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:bg-blue-500/20 group-hover:border-blue-500/30 transition-all shadow-xl">
-                    {React.cloneElement(b.icon as React.ReactElement, { size: 28 })}
+                    {React.cloneElement(b.icon as React.ReactElement<any>, { size: 28 })}
                   </div>
                 )}
                 <div className="space-y-1">

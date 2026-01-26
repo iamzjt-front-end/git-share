@@ -1,10 +1,19 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { RefreshCw, CheckCircle2, ShieldAlert } from 'lucide-react';
 
-const PrinciplesSlide: React.FC = () => {
-  const principles = [
+interface Principle {
+  icon: React.ReactNode;
+  title: string;
+  desc: string;
+}
+
+interface PrinciplesSlideProps {
+  customPrinciples?: Principle[];
+}
+
+const PrinciplesSlide: React.FC<PrinciplesSlideProps> = ({ customPrinciples }) => {
+  const defaultPrinciples = [
     {
       icon: <RefreshCw size={40} className="text-blue-400" />,
       title: "原则一：频繁同步",
@@ -22,10 +31,12 @@ const PrinciplesSlide: React.FC = () => {
     }
   ];
 
+  const principles = customPrinciples || defaultPrinciples;
+
   return (
     <div className="w-full h-full flex flex-col p-12 md:p-24 justify-center">
       <div className="max-w-6xl w-full mx-auto">
-        <h2 className="text-4xl md:text-5xl font-black mb-16 text-center">三个关键原则</h2>
+        <h2 className="text-4xl md:text-5xl font-black mb-16 text-center">核心原则</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {principles.map((p, i) => (
