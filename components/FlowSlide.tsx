@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -15,7 +14,7 @@ const steps = [
   { icon: <Plus />, text: '创建分支' },
   { icon: <Code />, text: '开发提交' },
   { icon: <RefreshCw />, text: '同步基准' },
-  { icon: <Combine />, text: 'Squash' },
+  { icon: <Combine />, text: 'Squash/Fixup' },
   { icon: <RefreshCw />, text: '执行 Rebase' },
   { icon: <ArrowRight />, text: '强推 PR' },
   { icon: <ShieldCheck />, text: '合并代码' }
@@ -64,9 +63,9 @@ const FlowSlide: React.FC = () => {
           </div>
           <div className="p-6 bg-gray-900 border border-gray-800 rounded-2xl">
             <h4 className="text-purple-400 font-bold mb-2 flex items-center gap-2">
-              <Combine size={16} /> 压缩提交
+              <Combine size={16} /> 压缩提交 (Squash/Fixup)
             </h4>
-            <p className="text-xs text-gray-500">一个功能对应一个提交，方便代码回滚与审查。</p>
+            <p className="text-xs text-gray-500">一个需求一个提交，方便代码回滚与审查。</p>
           </div>
           <div className="p-6 bg-gray-900 border border-gray-800 rounded-2xl">
             <h4 className="text-green-400 font-bold mb-2 flex items-center gap-2">

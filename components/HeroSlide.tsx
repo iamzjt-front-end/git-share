@@ -35,7 +35,7 @@ const HeroSlide: React.FC<HeroSlideProps> = ({ onNext }) => {
         transition={{ delay: 0.4 }}
         className="text-xl md:text-2xl text-gray-400 mb-12 max-w-2xl text-center font-light leading-relaxed"
       >
-        打造清晰、线性、可追溯的代码提交历史，<br/>主讲人：<span className="text-blue-400 font-bold">朱锦涛</span>
+        打造清晰、线性、可追溯的代码提交历史，<br/>分享人：<span className="text-blue-400 font-bold">朱锦涛</span>
       </motion.p>
 
       <motion.button

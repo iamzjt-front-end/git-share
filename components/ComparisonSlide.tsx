@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { XCircle, CheckCircle, AlertTriangle } from 'lucide-react';
@@ -8,7 +7,7 @@ const ComparisonSlide: React.FC = () => {
     { label: '提交历史', merge: '分叉复杂，难以阅读', rebase: '线性清晰，一目了然' },
     { label: 'Merge Commit', merge: '每次合并产生额外节点', rebase: '无额外节点 (fast-forward)' },
     { label: '回滚操作', merge: '复杂，需指定父提交', rebase: '简单，直接 revert 即可' },
-    { label: 'Bug 定位', merge: 'git bisect 效率低', rebase: 'git bisect 高效高效' },
+    { label: 'Bug 定位', merge: 'git bisect 效率低', rebase: 'git bisect 高效' },
     { label: '代码审查', merge: '变更来源不清晰', rebase: '变更历史清晰可追溯' },
   ];
 

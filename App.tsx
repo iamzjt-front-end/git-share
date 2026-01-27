@@ -19,7 +19,10 @@ import {
   Target,
   Search,
   Stethoscope,
-  RefreshCw
+  RefreshCw,
+  Zap,
+  Star,
+  Layers
 } from 'lucide-react';
 import HeroSlide from './components/HeroSlide';
 import ContentSlide from './components/ContentSlide';
@@ -29,7 +32,8 @@ import GitFlowVisualizer from './components/GitFlowVisualizer';
 import GitGraphStaticComparison from './components/GitGraphStaticComparison';
 import VerticalLinearGraph from './components/VerticalLinearGraph';
 
-const TOTAL_SLIDES = 18;
+// Total slides remains 17
+const TOTAL_SLIDES = 17;
 
 const App: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -85,14 +89,13 @@ const App: React.FC = () => {
         return (
           <ContentSlide 
             title="请看这两张 Git 历史图" 
-            subtitle="直观感受它们的差异"
             customContent={<GitGraphStaticComparison minimal />}
           />
         );
       case 2:
         return (
           <ContentSlide 
-            title="灵魂拷问" 
+            title="有个问题" 
             centerContent
             customContent={
               <div className="w-full flex flex-col items-center gap-10 mt-8">
@@ -103,7 +106,7 @@ const App: React.FC = () => {
                   className="flex items-center gap-3 text-blue-300 bg-blue-500/10 px-6 py-3 rounded-full border border-blue-500/20"
                 >
                   <HelpCircle className="w-5 h-5" />
-                  <span className="text-lg font-medium">如果你是负责排障的那个人...</span>
+                  <span className="text-lg font-medium">如果你是负责“定位bug”的那个人...</span>
                 </motion.div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl px-4">
@@ -164,32 +167,6 @@ const App: React.FC = () => {
       case 4:
         return (
           <ContentSlide 
-            title="混乱的根源" 
-            subtitle="为什么直接 Merge 默认就会制造分叉历史？"
-            customContent={
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-                <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
-                  <div className="text-red-400 mb-4"><GitBranch size={32} /></div>
-                  <h4 className="text-xl font-bold text-gray-100 mb-3">历史分叉</h4>
-                  <p className="text-gray-400 text-sm">Git 必须保留两条时间线，主干自然变成分叉的“铁路图”</p>
-                </div>
-                <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
-                  <div className="text-yellow-400 mb-4"><GitMerge size={32} /></div>
-                  <h4 className="text-xl font-bold text-gray-100 mb-3">Merge Commit 噪音</h4>
-                  <p className="text-gray-400 text-sm">产生双父节点提交，回滚时需要面对“回滚哪一边”的复杂决策</p>
-                </div>
-                <div className="bg-white/5 border border-white/10 p-8 rounded-2xl">
-                  <div className="text-blue-400 mb-4"><Search size={32} /></div>
-                  <h4 className="text-xl font-bold text-gray-100 mb-3">定位困难</h4>
-                  <p className="text-gray-400 text-sm">git bisect 效率直线下降，说不清功能具体是哪次引入的</p>
-                </div>
-              </div>
-            }
-          />
-        );
-      case 5:
-        return (
-          <ContentSlide 
             title="理想的主干：线性之美"
             subtitle="我们希望主干历史尽量贴近真实的时间顺序"
             customContent={
@@ -230,7 +207,7 @@ const App: React.FC = () => {
             }
           />
         );
-      case 6:
+      case 5:
         return (
           <ContentSlide 
             title="核心思想：先变基，后合并"
@@ -255,17 +232,7 @@ const App: React.FC = () => {
             }
           />
         );
-      case 7: 
-        return (
-          <PrinciplesSlide 
-            customPrinciples={[
-              { icon: <RefreshCw size={40} className="text-blue-400" />, title: "原则一：频繁同步", desc: "主干有更新就及时 Rebase，避免最后一次性解决大量冲突。" },
-              { icon: <GitBranch size={40} className="text-purple-400" />, title: "原则二：合并前必变基", desc: "发起 PR/MR 前，功能分支必须基于最新主干，确保线性合入。" },
-              { icon: <ShieldCheck size={40} className="text-green-400" />, title: "原则三：保护主干历史", desc: "主干尽量只接受 Fast-forward 合并，严禁对公共分支执行 Rebase。" }
-            ]}
-          />
-        );
-      case 8:
+      case 6:
         return (
           <CodeSlide 
             title="Step 1 & 2: 创建与开发"
@@ -281,22 +248,22 @@ git commit -m "feat(auth): 添加登录核心逻辑"`}
             bullets={["提交粒度可以小", "遵循 Conventional Commits 规范"]}
           />
         );
-      case 9:
+      case 7:
         return (
           <CodeSlide 
-            title="Step 3 & 4: 同步与 Squash"
+            title="Step 3 & 4: 同步与 Squash/Fixup"
             subtitle="很多人会漏掉的重要步骤"
             code={`# 3. 始终先更新本地 main
 git checkout main && git pull origin main
 git checkout feature/xxx
 
-# 4. 推荐：Squash (一个需求一个提交)
+# 4. 推荐：Squash/Fixup (一个需求一个提交)
 git rebase -i main
-# 将编辑器中的 pick 改为 squash`}
+# 将编辑器中的 pick 改为 squash 或 fixup`}
             bullets={["一个需求一个提交，回滚极简", "Rebase 冲突只需解决一次"]}
           />
         );
-      case 10:
+      case 8:
         return (
           <ContentSlide 
             title="Step 5: 执行 Rebase"
@@ -321,7 +288,7 @@ git rebase -i main
             }
           />
         );
-      case 11:
+      case 9:
         return (
           <CodeSlide 
             title="Step 6: 冲突处理流程"
@@ -333,30 +300,54 @@ git add <conflict-file>
 # 3. 继续变基
 git rebase --continue
 
-# 💡 实在太复杂？先放弃沟通
+# 💡 实在太复杂？先放弃，去沟通
 git rebase --abort`}
           />
         );
-      case 12:
+      case 10:
         return (
           <ContentSlide 
             title="Step 7: 为什么 Push 被拒？"
             customContent={
-              <div className="max-w-3xl mx-auto space-y-6">
+              <div className="max-w-6xl mx-auto space-y-8">
                 <div className="p-6 bg-red-500/5 border border-red-500/20 rounded-2xl flex items-start gap-4">
                   <AlertTriangle className="text-red-400 shrink-0" />
                   <p className="text-gray-400">因为 Rebase 改写了 Hash，导致本地与远端历史不一致，Git 默认保护机制会拦截普通 push。</p>
                 </div>
-                <div className="p-10 bg-gray-900 rounded-3xl border border-blue-500/30">
-                  <div className="text-xs uppercase tracking-widest text-blue-400 mb-4 font-bold">正确姿势</div>
-                  <code className="text-2xl font-mono text-white block mb-4">git push --force-with-lease</code>
-                  <p className="text-gray-400 text-sm">这是一个“成熟团队”的安全做法，避免误覆盖他人的最新提交。</p>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="p-10 bg-gray-900 rounded-3xl border border-blue-500/30 flex flex-col justify-center">
+                    <div className="text-xs uppercase tracking-widest text-blue-400 mb-4 font-bold">正确姿势</div>
+                    <code className="text-2xl font-mono text-white block mb-4">git push --force-with-lease</code>
+                    <p className="text-gray-400 text-sm">这是一个“成熟团队”的安全做法，避免误覆盖他人的最新提交。</p>
+                  </div>
+
+                  <div className="p-8 bg-white/5 border border-white/10 rounded-3xl space-y-6">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-red-400 font-bold">
+                        <code className="bg-red-500/20 px-2 py-1 rounded">--force / -f</code>
+                      </div>
+                      <p className="text-gray-300 text-sm pl-2">👉 不看远程状态，直接覆盖</p>
+                    </div>
+                    <div className="h-px bg-white/10 w-full" />
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-blue-400 font-bold">
+                        <code className="bg-blue-500/20 px-2 py-1 rounded">--force-with-lease</code>
+                      </div>
+                      <p className="text-gray-300 text-sm pl-2">👉 确认远程没被别人改过，才覆盖</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-6 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl flex items-start gap-4">
+                  <HelpCircle className="text-yellow-400 shrink-0" />
+                  <p className="text-gray-300 font-medium">💡 建议：在心理上把 <code className="text-yellow-200">--force/-f</code> 当成禁用命令（慎用）</p>
                 </div>
               </div>
             }
           />
         );
-      case 13:
+      case 11:
         return (
           <ContentSlide 
             title="Step 8 & 9: PR 与合并"
@@ -367,7 +358,17 @@ git rebase --abort`}
             ]}
           />
         );
-      case 14:
+      case 12: 
+        return (
+          <PrinciplesSlide 
+            customPrinciples={[
+              { icon: <RefreshCw size={40} className="text-blue-400" />, title: "原则一：频繁同步", desc: "主干有更新就及时 Rebase，避免最后一次性解决大量冲突。" },
+              { icon: <GitBranch size={40} className="text-purple-400" />, title: "原则二：合并前必变基", desc: "发起 PR/MR 前，功能分支必须基于最新主干，确保线性合入。" },
+              { icon: <ShieldCheck size={40} className="text-green-400" />, title: "原则三：保护主干历史", desc: "主干尽量只接受 Fast-forward 合并，严禁对公共分支执行 Rebase。" }
+            ]}
+          />
+        );
+      case 13:
         return (
           <ContentSlide 
             title="变基手术刀：什么时候不能用？"
@@ -375,12 +376,12 @@ git rebase --abort`}
                <div className="bg-red-500/5 border border-red-500/20 rounded-3xl p-12 text-center">
                  <Stethoscope className="w-24 h-24 text-red-500 mx-auto mb-8" />
                  <h3 className="text-3xl font-bold text-red-200 mb-8">Rebase 只能用在自己身上</h3>
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-2xl mx-auto">
-                    <div className="flex items-center gap-3 text-lg text-gray-300">
+                 <div className="flex flex-col md:flex-row justify-center gap-12 text-left max-w-5xl mx-auto">
+                    <div className="flex items-center gap-3 text-lg text-gray-300 whitespace-nowrap">
                       <div className="w-2 h-2 bg-red-500 rounded-full" />
-                      禁止 Rebase 公共分支 (Main/Develop)
+                      禁止 Rebase 公共分支 (master/beta/pre)
                     </div>
-                    <div className="flex items-center gap-3 text-lg text-gray-300">
+                    <div className="flex items-center gap-3 text-lg text-gray-300 whitespace-nowrap">
                       <div className="w-2 h-2 bg-red-500 rounded-full" />
                       禁止 Rebase 别人正在协作的分支
                     </div>
@@ -389,7 +390,7 @@ git rebase --abort`}
             }
           />
         );
-      case 15:
+      case 14:
         return (
           <ContentSlide 
             title="后悔药：git reflog"
@@ -409,7 +410,7 @@ git rebase --abort`}
             }
           />
         );
-      case 16:
+      case 15:
         return (
           <ContentSlide 
             title="落地建议：总结"
@@ -418,7 +419,7 @@ git rebase --abort`}
                 <table className="w-full">
                   <thead className="bg-white/5 border-b border-white/10">
                     <tr className="text-left">
-                      <th className="p-4 text-gray-400 uppercase text-xs">阶段</th>
+                      <th className="p-4 text-gray-400 uppercase text-xs">阶段/工具</th>
                       <th className="p-4 text-gray-400 uppercase text-xs">建议</th>
                     </tr>
                   </thead>
@@ -429,7 +430,7 @@ git rebase --abort`}
                     </tr>
                     <tr>
                       <td className="p-4 font-bold text-purple-300">发 PR 前</td>
-                      <td className="p-4 text-gray-300">Squash (推荐) + Rebase (必须)</td>
+                      <td className="p-4 text-gray-300">Squash/Fixup (推荐) + Rebase (必须)</td>
                     </tr>
                     <tr>
                       <td className="p-4 font-bold text-yellow-300">推送</td>
@@ -439,32 +440,142 @@ git rebase --abort`}
                       <td className="p-4 font-bold text-green-300">主干</td>
                       <td className="p-4 text-gray-300">严格保持线性历史</td>
                     </tr>
+                    <tr>
+                      <td className="p-4 font-bold text-red-300">Git Hooks</td>
+                      <td className="p-4 text-gray-300">
+                        <div className="flex flex-col gap-2">
+                          <span><code className="text-red-200">pre-push & commit-msg</code>：</span>
+                          <span className="text-sm opacity-80">一个是禁止直接 push (强制 PR/MR 流程)，另一个是保证 commit message 的可读性</span>
+                        </div>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             }
           />
         );
-      case 17:
+      case 16:
         return (
-          <ContentSlide 
-            title="谢谢观看"
-            centerContent
-            customContent={
-              <div className="text-center space-y-10">
-                <div className="w-32 h-32 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto border border-blue-500/20">
-                  <CheckCircle2 size={64} className="text-blue-500" />
+          <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-black">
+            {/* Immersive background effects */}
+            <div className="absolute inset-0 z-0 overflow-hidden">
+               {/* Animated Grid Background */}
+               <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+               
+               <motion.div 
+                 animate={{ 
+                   scale: [1, 1.2, 1],
+                   opacity: [0.1, 0.25, 0.1],
+                 }}
+                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-blue-600/10 rounded-full blur-[160px]" 
+               />
+               <motion.div 
+                 animate={{ 
+                   scale: [1, 1.3, 1],
+                   opacity: [0.05, 0.15, 0.05],
+                 }}
+                 transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[1100px] bg-purple-600/5 rounded-full blur-[200px]" 
+               />
+               
+               {/* Scanning Beam */}
+               <motion.div
+                 animate={{ y: ['-100%', '200%'] }}
+                 transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                 className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent pointer-events-none"
+               />
+            </div>
+
+            <div className="relative z-10 text-center max-w-5xl px-8 flex flex-col items-center space-y-24">
+              {/* Elegant Central Shield Icon */}
+              <motion.div 
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 80, damping: 12 }}
+                className="relative group"
+              >
+                <motion.div 
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-[-40px] border border-blue-500/10 rounded-full border-dashed"
+                />
+                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-150 group-hover:scale-175 transition-transform" />
+                <div className="relative w-44 h-44 bg-blue-500/5 rounded-[3.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl backdrop-blur-sm">
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    <CheckCircle2 size={100} className="text-blue-400/90" />
+                  </motion.div>
                 </div>
-                <div className="space-y-4">
-                  <p className="text-2xl text-gray-200 font-bold">“不是为了操作炫技，而是为了排障简单”</p>
-                  <p className="text-gray-500">为了让版本管理像艺术一样优雅</p>
-                </div>
-                <div className="pt-20 text-gray-600 text-xs tracking-widest uppercase">
-                  朱锦涛 · 团队技术分享
-                </div>
+              </motion.div>
+
+              {/* Refined and Balanced Text Section */}
+              <div className="space-y-16">
+                <motion.h2
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="text-5xl md:text-7xl font-black text-white/95 tracking-tighter"
+                >
+                  谢谢观看
+                </motion.h2>
+                
+                <motion.div 
+                   initial={{ opacity: 0, y: 30 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   transition={{ delay: 0.5 }}
+                   className="space-y-12"
+                >
+                  {/* Consistent font size for both focus points */}
+                  <p className="text-2xl md:text-4xl text-gray-300 font-medium leading-relaxed tracking-wide max-w-4xl mx-auto">
+                    我们这样做不是为了 Git 操作炫技，
+                  </p>
+                  <p className="text-2xl md:text-4xl text-gray-300 font-medium leading-relaxed tracking-wide max-w-4xl mx-auto">
+                    而是为了让 <span className="text-blue-400 font-bold border-b-2 border-blue-500/30 pb-1">排障、回滚、定位</span> 更简单。
+                  </p>
+                </motion.div>
               </div>
-            }
-          />
+
+              {/* Elegant divider */}
+              <motion.div 
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "120px", opacity: 0.4 }}
+                transition={{ delay: 1, duration: 1.2 }}
+                className="h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+              />
+            </div>
+
+            {/* Subtle floating particles */}
+            {[...Array(25)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-[2px] h-[2px] bg-blue-400/30 rounded-full z-0"
+                initial={{ 
+                  x: Math.random() * 2000 - 1000, 
+                  y: Math.random() * 1000,
+                  opacity: 0 
+                }}
+                animate={{ 
+                  y: [null, -200],
+                  opacity: [0, 0.6, 0]
+                }}
+                transition={{ 
+                  duration: 8 + Math.random() * 12, 
+                  repeat: Infinity,
+                  delay: Math.random() * 15 
+                }}
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                }}
+              />
+            ))}
+          </div>
         );
       default:
         return null;
