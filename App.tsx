@@ -31,6 +31,7 @@ import PrinciplesSlide from './components/PrinciplesSlide';
 import GitFlowVisualizer from './components/GitFlowVisualizer';
 import GitGraphStaticComparison from './components/GitGraphStaticComparison';
 import VerticalLinearGraph from './components/VerticalLinearGraph';
+import ThankYouSlide from './components/ThankYouSlide';
 
 // Total slides remains 17
 const TOTAL_SLIDES = 17;
@@ -239,13 +240,15 @@ const App: React.FC = () => {
             subtitle="从最新主干出发，保持原子提交"
             code={`# 1. 确保基于最新主干
 git checkout main
-git pull origin main
+git pull --rebase origin main
 git checkout -b feature/xxx
 
 # 2. 正常开发提交
-git add .
-git commit -m "feat(auth): 添加登录核心逻辑"`}
-            bullets={["提交粒度可以小", "遵循 Conventional Commits 规范"]}
+git commit -am "feat(auth): 添加登录核心逻辑"`}
+            bullets={[
+              "提交粒度可以小", 
+              <span>遵循 <a href="https://www.conventionalcommits.org/zh-hans/v1.0.0/" target="_blank" rel="noopener noreferrer" className="text-blue-400 underline hover:text-blue-300 font-bold">Conventional Commits 规范</a></span>
+            ]}
           />
         );
       case 7:
@@ -254,12 +257,14 @@ git commit -m "feat(auth): 添加登录核心逻辑"`}
             title="Step 3 & 4: 同步与 Squash/Fixup"
             subtitle="很多人会漏掉的重要步骤"
             code={`# 3. 始终先更新本地 main
-git checkout main && git pull origin main
+git checkout main
+git pull --rebase origin main
 git checkout feature/xxx
 
 # 4. 推荐：Squash/Fixup (一个需求一个提交)
-git rebase -i main
-# 将编辑器中的 pick 改为 squash 或 fixup`}
+git rebase -i <hash> 
+# 或者只整理最近 N 个：
+git rebase -i HEAD~N`}
             bullets={["一个需求一个提交，回滚极简", "Rebase 冲突只需解决一次"]}
           />
         );
@@ -269,8 +274,10 @@ git rebase -i main
             title="Step 5: 执行 Rebase"
             customContent={
               <div className="space-y-8">
-                <div className="bg-black border border-gray-800 rounded-xl p-6 font-mono text-lg text-blue-300">
-                  git rebase main
+                <div className="bg-[#0d1117] border border-white/10 rounded-xl p-8 font-mono text-xl md:text-2xl flex items-center gap-4">
+                  <span className="text-cyan-400 font-bold">git</span>
+                  <span className="text-yellow-400">rebase</span>
+                  <span className="text-blue-300">main</span>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                    <div className="p-8 bg-gray-900 rounded-3xl border border-gray-800 relative">
@@ -316,9 +323,11 @@ git rebase --abort`}
                 </div>
                 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <div className="p-10 bg-gray-900 rounded-3xl border border-blue-500/30 flex flex-col justify-center">
-                    <div className="text-xs uppercase tracking-widest text-blue-400 mb-4 font-bold">正确姿势</div>
-                    <code className="text-2xl font-mono text-white block mb-4">git push --force-with-lease</code>
+                  <div className="p-10 bg-[#0d1117] rounded-3xl border border-blue-500/30 flex flex-col justify-center">
+                    <div className="text-xs uppercase tracking-widest text-blue-400 mb-6 font-bold">正确姿势</div>
+                    <code className="text-xl md:text-2xl font-mono block mb-4 leading-relaxed">
+                      <span className="text-cyan-400 font-bold">git</span> <span className="text-yellow-400">push</span> <span className="text-pink-400">--force-with-lease</span>
+                    </code>
                     <p className="text-gray-400 text-sm">这是一个“成熟团队”的安全做法，避免误覆盖他人的最新提交。</p>
                   </div>
 
@@ -394,17 +403,20 @@ git rebase --abort`}
         return (
           <ContentSlide 
             title="后悔药：git reflog"
+            titleClassName="from-amber-400 via-orange-500 to-yellow-500"
             subtitle="手滑了也不用惊慌"
             customContent={
-              <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 w-full max-w-3xl mx-auto">
+              <div className="bg-gray-900 p-8 rounded-2xl border border-gray-800 w-full max-w-3xl mx-auto shadow-2xl">
                 <div className="flex items-center gap-3 mb-4 text-yellow-400">
                   <Undo2 />
                   <span className="font-bold text-xl">时光倒流</span>
                 </div>
                 <p className="text-gray-400 mb-6">记录了 HEAD 的每一次移动。即使你删除了分支、强行重置了提交，只要 reflog 还在，就能找回来。</p>
-                <div className="font-mono text-sm text-blue-300 bg-black p-4 rounded-lg">
-                  <p className="text-green-400"># 找到变基前的位置</p>
-                  <p>git reset --hard HEAD@{2}</p>
+                <div className="font-mono text-sm text-blue-300 bg-black p-4 rounded-lg border border-white/5">
+                  <p className="text-gray-600 mb-1"># 1. 找到变基前或操作前的位置</p>
+                  <p className="text-green-400 mb-2">git reflog</p>
+                  <p className="text-gray-600 mb-1"># 2. 强制恢复到那个时刻</p>
+                  <p><span className="text-pink-400">git reset --hard</span> HEAD@<span className="text-blue-300">{"{2}"}</span></p>
                 </div>
               </div>
             }
@@ -415,38 +427,37 @@ git rebase --abort`}
           <ContentSlide 
             title="落地建议：总结"
             customContent={
-              <div className="overflow-hidden rounded-2xl border border-white/10">
+              <div className="overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-white/[0.02]">
                 <table className="w-full">
                   <thead className="bg-white/5 border-b border-white/10">
                     <tr className="text-left">
-                      <th className="p-4 text-gray-400 uppercase text-xs">阶段/工具</th>
-                      <th className="p-4 text-gray-400 uppercase text-xs">建议</th>
+                      <th className="p-4 text-gray-400 uppercase text-xs tracking-widest font-black">阶段 / 工具</th>
+                      <th className="p-4 text-gray-400 uppercase text-xs tracking-widest font-black">建议做法</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/5">
                     <tr>
                       <td className="p-4 font-bold text-blue-300">开发阶段</td>
-                      <td className="p-4 text-gray-300">自由提交，无需心理压力</td>
+                      <td className="p-4 text-gray-300">自由提交，主要保证工作进度不丢失</td>
                     </tr>
                     <tr>
-                      <td className="p-4 font-bold text-purple-300">发 PR 前</td>
-                      <td className="p-4 text-gray-300">Squash/Fixup (推荐) + Rebase (必须)</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-bold text-yellow-300">推送</td>
-                      <td className="p-4 text-gray-300">统一使用 --force-with-lease</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-bold text-green-300">主干</td>
-                      <td className="p-4 text-gray-300">严格保持线性历史</td>
-                    </tr>
-                    <tr>
-                      <td className="p-4 font-bold text-red-300">Git Hooks</td>
+                      <td className="p-4 font-bold text-purple-300">发 PR / MR 前</td>
                       <td className="p-4 text-gray-300">
-                        <div className="flex flex-col gap-2">
-                          <span><code className="text-red-200">pre-push & commit-msg</code>：</span>
-                          <span className="text-sm opacity-80">一个是禁止直接 push (强制 PR/MR 流程)，另一个是保证 commit message 的可读性</span>
-                        </div>
+                        <span className="text-white font-medium">Squash/Fixup</span> (推荐) + <span className="text-white font-medium">Rebase</span> (必须)
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="p-4 font-bold text-yellow-300">推送远端</td>
+                      <td className="p-4 text-gray-300 font-mono text-sm">git push --force-with-lease</td>
+                    </tr>
+                    <tr>
+                      <td className="p-4 font-bold text-green-300">主干同步</td>
+                      <td className="p-4 text-gray-300">严格执行 Fast-forward，不留 Merge 节点</td>
+                    </tr>
+                    <tr>
+                      <td className="p-4 font-bold text-red-300">团队约束</td>
+                      <td className="p-4 text-gray-300 text-sm">
+                        通过 Git Hooks 自动校验规范 (Commit-msg / Pre-push)
                       </td>
                     </tr>
                   </tbody>
@@ -456,127 +467,7 @@ git rebase --abort`}
           />
         );
       case 16:
-        return (
-          <div className="w-full h-full flex flex-col items-center justify-center relative overflow-hidden bg-black">
-            {/* Immersive background effects */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-               {/* Animated Grid Background */}
-               <div className="absolute inset-0 opacity-[0.05]" style={{ backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
-               
-               <motion.div 
-                 animate={{ 
-                   scale: [1, 1.2, 1],
-                   opacity: [0.1, 0.25, 0.1],
-                 }}
-                 transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] bg-blue-600/10 rounded-full blur-[160px]" 
-               />
-               <motion.div 
-                 animate={{ 
-                   scale: [1, 1.3, 1],
-                   opacity: [0.05, 0.15, 0.05],
-                 }}
-                 transition={{ duration: 20, repeat: Infinity, ease: "easeInOut", delay: 5 }}
-                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[1100px] bg-purple-600/5 rounded-full blur-[200px]" 
-               />
-               
-               {/* Scanning Beam */}
-               <motion.div
-                 animate={{ y: ['-100%', '200%'] }}
-                 transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-                 className="absolute top-0 left-0 w-full h-40 bg-gradient-to-b from-transparent via-blue-500/5 to-transparent pointer-events-none"
-               />
-            </div>
-
-            <div className="relative z-10 text-center max-w-5xl px-8 flex flex-col items-center space-y-24">
-              {/* Elegant Central Shield Icon */}
-              <motion.div 
-                initial={{ scale: 0.6, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 80, damping: 12 }}
-                className="relative group"
-              >
-                <motion.div 
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-[-40px] border border-blue-500/10 rounded-full border-dashed"
-                />
-                <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full scale-150 group-hover:scale-175 transition-transform" />
-                <div className="relative w-44 h-44 bg-blue-500/5 rounded-[3.5rem] flex items-center justify-center border border-blue-500/20 shadow-2xl backdrop-blur-sm">
-                  <motion.div
-                    animate={{ 
-                      scale: [1, 1.1, 1],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    <CheckCircle2 size={100} className="text-blue-400/90" />
-                  </motion.div>
-                </div>
-              </motion.div>
-
-              {/* Refined and Balanced Text Section */}
-              <div className="space-y-16">
-                <motion.h2
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="text-5xl md:text-7xl font-black text-white/95 tracking-tighter"
-                >
-                  谢谢观看
-                </motion.h2>
-                
-                <motion.div 
-                   initial={{ opacity: 0, y: 30 }}
-                   animate={{ opacity: 1, y: 0 }}
-                   transition={{ delay: 0.5 }}
-                   className="space-y-12"
-                >
-                  {/* Consistent font size for both focus points */}
-                  <p className="text-2xl md:text-4xl text-gray-300 font-medium leading-relaxed tracking-wide max-w-4xl mx-auto">
-                    我们这样做不是为了 Git 操作炫技，
-                  </p>
-                  <p className="text-2xl md:text-4xl text-gray-300 font-medium leading-relaxed tracking-wide max-w-4xl mx-auto">
-                    而是为了让 <span className="text-blue-400 font-bold border-b-2 border-blue-500/30 pb-1">排障、回滚、定位</span> 更简单。
-                  </p>
-                </motion.div>
-              </div>
-
-              {/* Elegant divider */}
-              <motion.div 
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: "120px", opacity: 0.4 }}
-                transition={{ delay: 1, duration: 1.2 }}
-                className="h-[1px] bg-gradient-to-r from-transparent via-blue-500 to-transparent"
-              />
-            </div>
-
-            {/* Subtle floating particles */}
-            {[...Array(25)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-[2px] h-[2px] bg-blue-400/30 rounded-full z-0"
-                initial={{ 
-                  x: Math.random() * 2000 - 1000, 
-                  y: Math.random() * 1000,
-                  opacity: 0 
-                }}
-                animate={{ 
-                  y: [null, -200],
-                  opacity: [0, 0.6, 0]
-                }}
-                transition={{ 
-                  duration: 8 + Math.random() * 12, 
-                  repeat: Infinity,
-                  delay: Math.random() * 15 
-                }}
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-              />
-            ))}
-          </div>
-        );
+        return <ThankYouSlide />;
       default:
         return null;
     }

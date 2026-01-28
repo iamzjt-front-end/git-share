@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 
@@ -14,6 +13,7 @@ interface ContentSlideProps {
   bullets?: (Bullet | string)[];
   centerContent?: boolean;
   customContent?: React.ReactNode;
+  titleClassName?: string;
 }
 
 const ContentSlide: React.FC<ContentSlideProps> = ({ 
@@ -21,7 +21,8 @@ const ContentSlide: React.FC<ContentSlideProps> = ({
   subtitle, 
   bullets, 
   centerContent = false,
-  customContent 
+  customContent,
+  titleClassName = "from-white to-gray-400"
 }) => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center px-8 md:px-16 py-12 overflow-y-auto">
@@ -29,7 +30,7 @@ const ContentSlide: React.FC<ContentSlideProps> = ({
         <motion.h2 
           initial={{ x: -30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          className="text-4xl md:text-6xl font-black mb-4 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent leading-[1.2] pb-2"
+          className={`text-4xl md:text-6xl font-black mb-4 bg-gradient-to-r ${titleClassName} bg-clip-text text-transparent leading-[1.2] pb-2`}
         >
           {title}
         </motion.h2>
@@ -54,7 +55,6 @@ const ContentSlide: React.FC<ContentSlideProps> = ({
                 transition={{ delay: 0.1 * i }}
                 className="flex items-center gap-6 group"
               >
-                {/* Fixed TypeScript error by casting to React.ReactElement<any> to allow 'size' prop injection */}
                 {typeof b === 'object' && b.icon && (
                   <div className="shrink-0 p-4 bg-white/5 rounded-2xl border border-white/10 group-hover:bg-blue-500/20 group-hover:border-blue-500/30 transition-all shadow-xl">
                     {React.cloneElement(b.icon as React.ReactElement<any>, { size: 28 })}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCw, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { RefreshCw, CheckCircle2, ShieldAlert, Zap, Info } from 'lucide-react';
 
 interface Principle {
   icon: React.ReactNode;
@@ -36,7 +36,7 @@ const PrinciplesSlide: React.FC<PrinciplesSlideProps> = ({ customPrinciples }) =
   return (
     <div className="w-full h-full flex flex-col p-12 md:p-24 justify-center">
       <div className="max-w-6xl w-full mx-auto">
-        <h2 className="text-4xl md:text-5xl font-black mb-16 text-center">核心原则</h2>
+        <h2 className="text-4xl md:text-5xl font-black mb-16 text-center tracking-tight">核心原则</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {principles.map((p, i) => (
@@ -57,6 +57,34 @@ const PrinciplesSlide: React.FC<PrinciplesSlideProps> = ({ customPrinciples }) =
             </motion.div>
           ))}
         </div>
+
+        {/* Fast-forward explanation block */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8 }}
+          className="mt-16 p-8 bg-blue-500/5 border border-blue-500/20 rounded-[2.5rem] relative overflow-hidden group"
+        >
+          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
+            <Zap size={120} className="text-blue-400" />
+          </div>
+          
+          <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+            <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 shrink-0 shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+              <Zap size={32} />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <h4 className="text-2xl font-bold text-blue-100">什么是 Fast-forward 合并？</h4>
+                <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30 font-black tracking-widest uppercase">推荐模式</span>
+              </div>
+              <p className="text-gray-400 text-lg leading-relaxed max-w-4xl">
+                当主干分支在开发期间没有新提交时，Git 只需将主干指针<span className="text-blue-300 font-bold">直接移动</span>到功能分支的末端。这种合并方式<span className="text-white font-medium">不产生额外的 Merge Commit 节点</span>，能够保证提交历史像一条直线一样清晰。
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
